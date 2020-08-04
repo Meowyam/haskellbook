@@ -1,0 +1,59 @@
+1. b
+2. \x(\y.xxy)  c
+3. b
+
+combinators
+1. y
+2. n
+3. y
+4. y
+5. n
+
+normal or diverge
+1. n
+2. d
+3. n 
+
+beta reduce
+1. (\abc.cba)zz(\wv.w)
+     (\a.\b.\c.cba)(z)z(\w.\v.w)
+     (\b.\c.cbz)z(\w.\v.w)
+     (\c.czz)(\w.\v.w)
+     (\w.\v.w)zz
+     (\v.z)z
+     z
+
+2. (\x.\y.\xyy)(\a.a)b
+     (\y.(\a.a).yy)(b)
+     (\a.a)(b)b
+     bb
+
+3. (\y.y)(\x.xx)(\z.zq)
+     (\x.xx)(\z.zq)
+     (\z.zq)(\z.zq)
+     (\z.zq)(q)
+     qq
+
+4. (\z.z)(\z.zz)(\z.zy)
+     (\z.zz)(\z.zy)
+     (\z.zy)(\z.zy)
+     (\z.zy)(y)
+     (yy)
+
+5. (\x.\y.xyy)(\y.y)y
+     (\y.(\y.y)yy) y
+     (\y.y)(y)  y
+     yy
+
+6. (\a.aa)(\b.ba)c
+     (\b.ba)(\b.ba)c
+     (\b.ba)(a)c
+     aac
+
+7. (\xyz.xz(yz))(\x.z)(\x.a)
+     (\x.\y.\z.xz(yz))(\x.z)(\x.a)
+     (\y.\z.(\x.z)(z)(yz))(\x.a)
+     (\z.(\x.z)(z) ((\x.a)z) )
+     (\z.z ((\x.a)z) )
+     (\z.((\x.a)z))
+     (\z.za)
