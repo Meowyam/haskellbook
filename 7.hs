@@ -116,12 +116,12 @@ tensDigit :: Integral a => a -> a
 
 tensDigit x 
   | x > 9 = (fst $ x `divMod` 10) `mod` 10
-  | otherwise = 0
+  | otherwise = error "There is no tenths digit!"
 
 hunsD :: Integral a => a -> a
 hunsD x
   | x > 99 = (fst $ x `divMod` 100) `mod` 10
-  | otherwise = 0
+  | otherwise = error "There is no hundredths digit!"
 
 --foldBool :: a -> a -> Bool -> a
 foldBool x y a =
