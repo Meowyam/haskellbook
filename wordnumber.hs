@@ -12,7 +12,9 @@ digitToWord n = strList !! n
 --many value digit
 --turn into list of digits
 digitList = []
-
+digits n
+  | n < 10= [n]
+  | (n >= 10) = digits (div n 10) ++ (mod n 10):[]
 --digits :: Int -> [Int]
 --digits n = undefined
 
