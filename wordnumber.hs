@@ -13,8 +13,9 @@ digitToWord n = numberWords !! n
 --turn into list of digits
 digits :: Int -> [Int]
 digits n
-  | (abs n) < 10= [(abs n)]
-  | otherwise = digits (div (abs n) 10) ++ [mod (abs n) 10]
+  | x < 10= [x]
+  | otherwise = digits (div x 10) ++ [mod x 10]
+  where x = abs n
 
 wordNumber :: Int -> String
 wordNumber n 
