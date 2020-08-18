@@ -16,5 +16,5 @@ digits n
   | (abs n) < 10= [(abs n)]
   | otherwise = digits (div (abs n) 10) ++ [mod (abs n) 10]
 
---wordNumber :: Int -> String
---wordNumber n = undefined
+wordNumber :: Int -> String
+wordNumber n = concat (intersperse "-" (map digitToWord (digits n)))
