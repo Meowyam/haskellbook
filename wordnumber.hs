@@ -17,4 +17,7 @@ digits n
   | otherwise = digits (div (abs n) 10) ++ [mod (abs n) 10]
 
 wordNumber :: Int -> String
-wordNumber n = concat (intersperse "-" (map digitToWord (digits n)))
+wordNumber n 
+  | n < 0 = "negative-" ++ phrase 
+  | otherwise = phrase 
+  where phrase = concat (intersperse "-" (map digitToWord (digits n)))
