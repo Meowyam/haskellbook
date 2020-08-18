@@ -2,12 +2,12 @@ module WordNumber where
 
 import Data.List (intersperse)
 
-strList = ["zero","one","two","three","four","five","six","seven","eight","nine"]
+numberWords = ["zero","one","two","three","four","five","six","seven","eight","nine"]
 
 ---get value from index
 --single value digit
 digitToWord :: Int -> String
-digitToWord n = strList !! n 
+digitToWord n = numberWords !! n 
 
 --many value digit
 --turn into list of digits
