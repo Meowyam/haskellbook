@@ -11,11 +11,10 @@ digitToWord n = strList !! n
 
 --many value digit
 --turn into list of digits
+digits :: Int -> [Int]
 digits n
-  | n < 10= [n]
-  | otherwise = digits (div n 10) ++ [mod n 10]
---digits :: Int -> [Int]
---digits n = undefined
+  | (abs n) < 10= [(abs n)]
+  | otherwise = digits (div (abs n) 10) ++ [mod (abs n) 10]
 
 --wordNumber :: Int -> String
 --wordNumber n = undefined
