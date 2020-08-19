@@ -5,10 +5,7 @@ safeTail (_:xs) = Just xs
 
 --true is higher than false
 eftBool :: Bool -> Bool -> [Bool]
-eftBool True False = []
-eftBool False True = [False, True]
-eftBool True True = [True]
-eftBool False False = [False]
+eftBool = eftGen
 
 eftOrd :: Ordering 
       -> Ordering
