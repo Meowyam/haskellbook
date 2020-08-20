@@ -57,4 +57,4 @@ main =
 myGeneric s [] = []
 myGeneric s (x:xs)
   | s == x = myGeneric s xs
-  | otherwise = (takeWhile(/=s) (x:xs)) : (myGeneric s (dropWhile (/=s) (x:xs)))
+  | otherwise = takeWhile(/=s) (x:xs) : (myGeneric s $ dropWhile (/=s) (x:xs))
