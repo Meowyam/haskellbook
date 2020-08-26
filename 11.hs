@@ -102,3 +102,275 @@ data Example = MakeExample deriving Show
 -- a unary constructor
 data ExampInt = MakeExample' Int deriving Show
 --MakeExample' :: Int -> ExampInt
+
+--pity the bool
+
+data BigSmall =
+      Big Bool
+    | Small Bool
+    deriving (Eq, Show)
+
+
+-- cardinality of BigSmall = 2 (ie. Bool == True+False) + 2 = 4
+--
+data NumberOrBool =
+  Numba Int8
+  | BoolyBool Bool
+  deriving (Eq, Show)
+myNumba = Numba (-128)
+
+--(Int8 is 2^8 + 2) == 258
+--
+--how does your garden grow?
+
+data FlowerType = Gardenia
+                | Daisy
+                | Rose
+                | Lilac
+                deriving Show
+
+type Gardener = String
+
+data Garden =
+  Garden Gardener FlowerType
+  deriving Show
+
+data Garden' =
+  Gardenia' Gardener
+    | Daisy' Gardener
+    | Rose' Gardener
+    | Lilac' Gardener
+  deriving (Eq, Show)
+
+-- programmers
+
+data OperatingSystem =
+  GnuPlusLinux
+  | OpenBSDPlusNevermindJustBSDStill
+  | Mac
+  | Windows
+  deriving (Eq, Show)
+
+data ProgLang =
+  Haskell
+  | Agda
+  | Idris
+  | PureScript
+  deriving (Eq, Show)
+
+data Programmer =
+  Programmer { os :: OperatingSystem
+             , lang :: ProgLang }
+  deriving (Eq, Show)
+
+data ThereYet =
+  There Float Int Bool
+  deriving (Eq, Show)
+
+allOperatingSystems :: [OperatingSystem]
+allOperatingSystems =
+  [ GnuPlusLinux
+  , OpenBSDPlusNevermindJustBSDStill
+  , Mac
+  , Windows
+  ]
+
+allLanguages :: [ProgLang]
+allLanguages =
+  [Haskell, Agda, Idris, PureScript]
+
+allProgrammers :: [Programmer]
+allProgrammers = 
+  [ Programmer os lang | os <- allOperatingSystems, lang <- allLanguages ]
+
+-- there are 16 programmers
+
+--exponentiation
+
+data Quantum =
+  Yes
+  | No
+  | Both
+  deriving (Eq, Show)
+
+
+c1 :: Quantum -> Bool
+c1 Yes = True
+c1 No = True
+c1 Both = True
+
+c2 Yes = True
+c2 No = True
+c2 Both = False
+
+c3 Yes = False
+c3 No = True
+c3 Both = True
+
+c4 Yes = False
+c4 No = False
+c4 Both = True
+
+c5 Yes = False
+c5 No = False
+c5 Both = False
+
+c6 Yes = True
+c6 No = False
+c6 Both = True
+
+c7 Yes = True
+c7 No = False
+c7 Both = False
+
+c8 Yes = False 
+c8 No = True
+c8 Both = False
+
+----
+
+--theQUAD
+--
+data Quad =
+    One
+  | Two
+  | Three
+  | Four
+  deriving (Eq, Show)
+
+--eQuad :: Either Quad Quad
+--eQuad = 4+4
+--
+--prodQuad :: (Quad, Quad)
+--proQuad = 4*4
+--
+--funcQuad :: Quad -> Quad
+--funcQuad = 4^4
+--
+--prodTBool :: (Bool, Bool, Bool)
+--prodTBool = 2 * 2 * 2
+--
+--gTwo :: Bool -> Bool -> Bool
+--gTwo = 2 ^ 2 ^ 2
+--
+--5 digit number:
+--fTwo :: Bool -> Quad -> Quad
+--fTwo = (2*2) ^ (2*2) ^ 2
+--
+-- binary tree
+
+data BinaryTree a =
+    Leaf
+  | Node (BinaryTree a) a (BinaryTree a)
+  deriving (Eq, Ord, Show)
+
+insert' :: Ord a
+        => a
+        -> BinaryTree a
+        -> BinaryTree a
+insert' b Leaf = Node Leaf b Leaf
+insert' b (Node left a right)
+  | b == a = Node left a right
+  | b < a
+  = Node (insert' b left) a right
+  | b > a
+  = Node left a (insert' b right)
+
+mapTree :: (a -> b)
+        -> BinaryTree a
+        -> BinaryTree b
+mapTree _ Leaf = Leaf
+mapTree f (Node left a right) =
+  Node (mapTree f left) (f a) (mapTree f right) 
+
+testTree' :: BinaryTree Integer
+testTree' =
+  Node (Node Leaf 3 Leaf)
+        1
+        (Node Leaf 4 Leaf)
+
+mapExpected =
+  Node (Node Leaf 4 Leaf)
+        2
+        (Node Leaf 5 Leaf)
+
+mapOkay =
+  if mapTree (+1) testTree' == mapExpected
+  then print "yup OK!"
+  else error "test failed!"
+
+--- binary trees to lists
+
+preorder :: BinaryTree a -> [a]
+preorder Leaf = []
+preorder (Node left a right) = a : (preorder left) ++ (preorder right)
+
+inorder :: BinaryTree a -> [a]
+inorder Leaf = []
+inorder (Node left a right) = (inorder left) ++ [a] ++ (inorder right) 
+
+postorder :: BinaryTree a -> [a]
+postorder Leaf = []
+postorder (Node left a right) = (postorder left) ++ (postorder right) ++ [a] 
+
+testTree :: BinaryTree Integer
+testTree =
+  Node (Node Leaf 1 Leaf)
+        2
+        (Node Leaf 3 Leaf)
+
+testPreorder :: IO ()
+testPreorder =
+  if preorder testTree == [2, 1, 3]
+  then putStrLn "Preorder fine!"
+  else putStrLn "Bad news bears."
+
+testInorder :: IO ()
+testInorder =
+  if inorder testTree == [1, 2, 3]
+  then putStrLn "Inorder fine!"
+  else putStrLn "Bad news bears."
+
+testPostorder :: IO ()
+testPostorder =
+  if postorder testTree == [1, 3, 2]
+  then putStrLn "Postorder fine!"
+  else putStrLn "Bad news bears"
+
+main :: IO ()
+main = do
+  testPreorder
+  testInorder
+  testPostorder
+
+-- all fine!
+--
+-- write foldr for BinaryTree
+
+foldTree :: (a -> b -> b)
+         -> b
+         -> BinaryTree a
+         -> b
+
+foldTree _ b Leaf = b
+
+foldTree f b (Node left a right) =
+  f a (foldTree f (foldTree f b right) left)
+
+-- chapter exercises
+
+data Weekday =
+  Monday
+  | Tuesday
+  | Wednesday
+  | Thursday
+  | Friday
+--
+-- Weekday is a type with five data constructors
+f :: Weekday -> String
+f Friday = "Miller Time"
+
+-- types defined with the data keywords, must begin with a capital letter
+--
+-- the function g xs = xs !! (length xs -1)
+-- gives the last element of xs
