@@ -1,4 +1,6 @@
 import Data.Int
+import Data.Char
+import Data.List
 
 --Dog types
 data Doggies a =
@@ -374,3 +376,34 @@ f Friday = "Miller Time"
 --
 -- the function g xs = xs !! (length xs -1)
 -- gives the last element of xs
+--
+-- language exercises
+
+capitalizeWord :: String -> String
+capitalizeWord n = toUpper (head n) : tail n
+
+capitalizeParagraph :: String -> String
+capitalizeParagraph n = go (capitalizeWord n)
+  where
+    go [] = []
+    go ('.':' ':xs) = ". " ++ (go $ capitalizeWord xs)
+    go (x:xs) = x : go xs
+
+-- phone exercise
+
+data Button = Button [(Digit, Char)]
+  deriving (Eq, Show)
+
+daPhone :: Button
+daPhone = Button [('1', "1"),
+                  ('2', "2abc"),
+                  ('3', "3def"),
+                  ('4', "4ghi"),
+                  ('5', "5jhk"),
+                  ('6', "6mno"),
+                  ('7', "7pqrs"),
+                  ('8', "8tuv"),
+                  ('9', "9wxyz"),
+                  ('*', "*^"),
+                  ('0', "0+_"),
+                  ('#', "#.,")]
