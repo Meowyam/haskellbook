@@ -36,6 +36,6 @@ vCryptval m = [if x > (length alphabet) then x-(length alphabet) else x | x <-(z
 
 vCryptchar = map (alphabet !!) . vCryptval
 
--- split into where spaces should go
+-- split into where spaces should go and UNWORD into a string
 splitVcrypted m = unwords $ foldr (\space acc -> [fst $ splitAt space $ head acc] ++ [snd $ splitAt space $ head acc] ++ (tail acc)) [(vCryptchar m)] (whereSpaces m) 
 
