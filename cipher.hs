@@ -37,6 +37,12 @@ vCryptval m = [if x > (length alphabet) then x-(length alphabet) else x | x <-(z
 vCryptchar = map (alphabet !!) . vCryptval
 
 -- split into where spaces should go and UNWORD into a string
-doVigenere m = unwords $ foldr (\space acc -> [fst $ splitAt space $ head acc] ++ [snd $ splitAt space $ head acc] ++ (tail acc)) [(vCryptchar m)] (whereSpaces m) 
+addSpaces m whichCrypt = unwords $ foldr (\space acc -> [fst $ splitAt space $ head acc] ++ [snd $ splitAt space $ head acc] ++ (tail acc)) [(whichCrypt)] (whereSpaces m) 
 
+doVigenere m = addSpaces m (vCryptchar m)
+
+unCryptval m = [if x < 0 then x+(length alphabet) else x | x <-(zipWith (-) (getMsgval m)(cycle keyVal)) ]
+unCryptchar = map (alphabet !!) . unCryptval
+
+unVigenere m = addSpaces m (unCryptchar m)
 
