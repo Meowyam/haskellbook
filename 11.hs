@@ -391,19 +391,50 @@ capitalizeParagraph n = go (capitalizeWord n)
 
 -- phone exercise
 
-data Button = Button [(Digit, Char)]
-  deriving (Eq, Show)
+daPhone = [['0','+','_'],
+          ['1'],
+          ['2','a','b','c'],
+          ['3','d','e','f'],
+          ['4','g','h','i'],
+          ['5','j','k','l'],
+          ['6','m','n','o'],
+          ['7','p','q','r','s'],
+          ['8','t','u','v'],
+          ['9','w','x','y','z'],
+          ['*','^'],
+          ['#','.',',']]
 
-daPhone :: Button
-daPhone = Button [('1', "1"),
-                  ('2', "2abc"),
-                  ('3', "3def"),
-                  ('4', "4ghi"),
-                  ('5', "5jhk"),
-                  ('6', "6mno"),
-                  ('7', "7pqrs"),
-                  ('8', "8tuv"),
-                  ('9', "9wxyz"),
-                  ('*', "*^"),
-                  ('0', "0+_"),
-                  ('#', "#.,")]
+convo :: [String]
+convo = ["Wanna play 20 questions",
+        "Ya",
+        "U 1st haha",
+        "Lol OK. Have u ever tasted alcohol",
+        "Lol ya",
+        "Wow ur cool haha. Ur turn",
+        "OK. Do u think I am pretty Lol",
+        "Lol ya",
+        "Just making sure rofl ur turn"]
+
+-- convert strings to phone friendly format
+
+convertStr [] = []
+convertStr (x:xs)
+  | isUpper x == True = ['^', (toLower x)] ++ convertStr xs
+  | x == '"' = convertStr xs
+  | x == ' ' = '_' : convertStr xs
+  | otherwise = x : convertStr xs
+
+-- gets which character it is as a grid, eg. [(2,3)] means it's in row 2, 3 presses
+charGrid :: Char -> [[Char]] -> [(Char, Int)]
+charGrid c xs = grid c xs 0
+grid c [] i = []
+grid c (x:xs) i = g x ++ grid c xs (i+1) 
+  where
+    g x = zip ([head (daPhone !! i)])(map (+1) (elemIndices c x))
+
+getPresses [] = []
+getPresses (y:ys)
+  | length ys < 0 = []
+  | otherwise = charGrid y daPhone : getPresses ys
+
+reverseTaps ys = map getPresses (map convertStr ys)
