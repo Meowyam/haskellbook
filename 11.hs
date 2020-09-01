@@ -463,3 +463,7 @@ data Expr
 eval :: Expr -> Integer
 eval (Lit n) = n
 eval (Add expr1 expr2) = eval expr1 + eval expr2
+
+printExpr :: Expr -> String
+printExpr (Lit n) = show n
+printExpr (Add expr1 expr2) = printExpr expr1 ++ "+" ++ printExpr expr2
