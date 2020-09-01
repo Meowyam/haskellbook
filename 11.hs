@@ -453,4 +453,13 @@ coolestWord = snd. theCoolest . words . concat
 
 --coolest letter is 'a'
 --coolest word is 'ur'
+--
+-- hutton's razor
 
+data Expr
+  = Lit Integer
+  | Add Expr Expr
+
+eval :: Expr -> Integer
+eval (Lit n) = n
+eval (Add expr1 expr2) = eval expr1 + eval expr2
