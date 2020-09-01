@@ -438,3 +438,19 @@ getPresses (y:ys)
   | otherwise = charGrid y daPhone : getPresses ys
 
 reverseTaps ys = map getPresses (map convertStr ys)
+
+-- get the most frequent element in a list
+theCoolest :: Ord a => [a] -> (Int, a)
+theCoolest = maximum . map (\x -> (length x, head x)) . group . sort
+
+-- the coolest phrase is "Lol ya"
+
+coolestLtr :: [String] -> Char
+coolestLtr = (snd . theCoolest . map toLower . filter (not . flip elem " .,!")) . concat
+
+coolestWord :: [String] -> String
+coolestWord = snd. theCoolest . words . concat
+
+--coolest letter is 'a'
+--coolest word is 'ur'
+
