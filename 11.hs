@@ -391,18 +391,26 @@ capitalizeParagraph n = go (capitalizeWord n)
 
 -- phone exercise
 
-daPhone = [['0','+','_'],
-          ['1'],
-          ['2','a','b','c'],
-          ['3','d','e','f'],
-          ['4','g','h','i'],
-          ['5','j','k','l'],
-          ['6','m','n','o'],
-          ['7','p','q','r','s'],
-          ['8','t','u','v'],
-          ['9','w','x','y','z'],
-          ['*','^'],
-          ['#','.',',']]
+type Digit = Char
+type Keys = [Char]
+type Presses = Int
+
+data Phone = Phone [(Digit,Keys)]
+  deriving (Eq, Show)
+
+daPhone :: Phone
+daPhone = Phone [('0',"+_"),
+                ('1',"1"),
+                ('2',"2abc"),
+                ('3',"3def"),
+                ('4',"4ghi"),
+                ('5',"jkl"),
+                ('6',"mno"),
+                ('7',"pqrs"),
+                ('8',"tuv"),
+                ('9',"wxyz"),
+                ('*',"^"),
+                ('#',".,")]
 
 convo :: [String]
 convo = ["Wanna play 20 questions",
@@ -415,35 +423,43 @@ convo = ["Wanna play 20 questions",
         "Lol ya",
         "Just making sure rofl ur turn"]
 
--- convert strings to phone friendly format
+-- get how many presses to get char
 
-convertStr [] = []
-convertStr (x:xs)
-  | isUpper x == True = ['^', (toLower x)] ++ convertStr xs
-  | x == '"' = convertStr xs
-  | x == ' ' = '_' : convertStr xs
-  | otherwise = x : convertStr xs
+getPresses :: (Digit, Keys) -> Char -> Maybe Presses
+getPresses (digit, keys) c
+  | c == digit && not (isDigit c) = Just 0
+  | c == digit && isDigit c = Just (length keys)
+  | otherwise = elemIndex c keys
 
--- gets which character it is as a grid, eg. [(2,3)] means it's in row 2, 3 presses
-charGrid :: Char -> [[Char]] -> [(Char, Int)]
-charGrid c xs = grid c xs 0
-grid c [] i = []
-grid c (x:xs) i = g x ++ grid c xs (i+1) 
-  where
-    g x = zip ([head (daPhone !! i)])(map (+1) (elemIndices c x))
+-- get (digit, number of presses) for a char
+reverseTaps :: Phone -> Char -> [(Digit, Presses)]
+reverseTaps (Phone p) c
+  | isUpper c = ('*', 1) : go p (toLower c)
+  | (c == ' ') = [('0', 1)]
+  | otherwise = go p c
+  where go [] _ = []
+        go (x:xs) c = case getPresses x c of
+                               Just i -> [(fst x, i+1)]
+                               Nothing -> go xs c
 
-getPresses [] = []
-getPresses (y:ys)
-  | length ys < 0 = []
-  | otherwise = charGrid y daPhone : getPresses ys
+-- get sentences
+cellPhonesDead :: Phone -> String -> [(Digit, Presses)]
+cellPhonesDead p = concatMap (\c -> reverseTaps p c)
 
-reverseTaps ys = map getPresses (map convertStr ys)
+fingerTaps :: [(Digit, Presses)] -> Presses
+fingerTaps = foldr (\(_,p) acc -> p + acc) 0
 
 -- get the most frequent element in a list
 theCoolest :: Ord a => [a] -> (Int, a)
 theCoolest = maximum . map (\x -> (length x, head x)) . group . sort
 
 -- the coolest phrase is "Lol ya"
+
+mostPopularLetter :: String -> Char
+mostPopularLetter = snd . theCoolest
+
+eachCost :: String -> Int
+eachCost = (fingerTaps . reverseTaps daPhone . mostPopularLetter)
 
 coolestLtr :: [String] -> Char
 coolestLtr = (snd . theCoolest . map toLower . filter (not . flip elem " .,!")) . concat
