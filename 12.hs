@@ -42,7 +42,6 @@ countVowels phrase = go xs
   where
     xs = map toLower phrase
     go [] = 0
-    go [_] = 0
     go (x:xs)
       | checkVowel x = 1 + go xs
       | otherwise = go xs
