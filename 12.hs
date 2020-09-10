@@ -85,3 +85,44 @@ integerToNat n
   | n == 0 = Just Zero
   | otherwise = case integerToNat (n-1) of
                   Just n -> Just (Succ n)
+
+-- small library for maybe
+
+isJust :: Maybe a -> Bool
+isJust (Just a) = True
+isJust Nothing = False
+
+isNothing :: Maybe a -> Bool
+isNothing (Just a) = False
+isNothing Nothing = True
+
+mayybee :: b -> (a -> b) -> Maybe a -> b
+mayybee x f y = case y of
+                    Nothing -> x
+                    Just z -> f z
+
+fromMaybe :: a -> Maybe a -> a
+fromMaybe x y = mayybee x id y 
+
+listToMaybe :: [a] -> Maybe a
+listToMaybe [] = Nothing
+listToMaybe (a:[]) = Nothing
+listToMaybe (a:as) = Just a
+
+maybeToList :: Maybe a -> [a]
+maybeToList Nothing = []
+maybeToList (Just n) = n : []
+
+catMaybes :: [Maybe a] -> [a]
+catMaybes [] = []
+catMaybes (a:as) = case a of 
+                     Nothing -> [] ++ catMaybes as
+                     Just a -> a : catMaybes as
+
+flipMaybe :: [Maybe a] -> Maybe [a]
+flipMaybe [] = Just []
+flipMaybe (Nothing:_) = Nothing
+flipMaybe (Just a:as) = case flipMaybe as of
+                     Nothing -> Nothing
+                     Just ls -> Just (a:ls)
+
