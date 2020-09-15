@@ -177,3 +177,25 @@ myUnfoldr f b = case f b of
 
 betterIterate :: (a -> a) -> a -> [a]
 betterIterate f x = myUnfoldr (\x -> Just (x, f x)) x
+
+-- tree builder
+--
+data BinaryTree a =
+  Leaf
+    | Node (BinaryTree a) a (BinaryTree a)
+    deriving (Eq, Ord, Show)
+
+-- unfold for binary tree
+
+unfold :: (a -> Maybe (a,b,a))
+       -> a
+       -> BinaryTree b
+unfold f a = case f a of
+               Nothing -> Leaf 
+               Just (a, b, c) -> Node (unfold f a) b (unfold f c) 
+
+treeBuild :: Integer -> BinaryTree Integer
+treeBuild n = unfold (goTree n) 0 where
+  goTree n x
+    | (n > x) = Just (x+1, x, x+1)
+    | otherwise = Nothing
