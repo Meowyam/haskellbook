@@ -126,3 +126,54 @@ flipMaybe (Just a:as) = case flipMaybe as of
                      Nothing -> Nothing
                      Just ls -> Just (a:ls)
 
+-- either
+--
+lefts' :: [Either a b] -> [a]
+lefts' = foldr lefty [] where
+  lefty (Left x) y =  x : y
+  lefty (Right _) y = y
+
+rights' :: [Either a b] -> [b]
+rights' = foldr righty [] where
+  righty (Left _) y = y
+  righty (Right x) y = x : y
+
+partitionEithers' :: [Either a b]
+                  -> ([a], [b])
+partitionEithers' = foldr party ([],[]) where
+  party (Left x) (l, r) = (x:l, r)
+  party (Right x) (l, r) = (l, x:r)
+
+eitherMaybe' :: (b -> c)
+             -> Either a b
+             -> Maybe c
+eitherMaybe' _ (Left _) = Nothing
+eitherMaybe' f (Right x) = Just $ f x
+
+either' :: (a -> c)
+        -> (b -> c)
+        -> Either a b
+        -> c
+either' f _ (Left a) = f a
+either' _ g (Right b) = g b
+
+eitherMaybe'' :: (b -> c)
+              -> Either a b
+              -> Maybe c
+
+eitherMaybe'' f b = either' (\a -> Nothing) (Just . f) b
+
+-- unfolds
+
+myIterate :: (a -> a) -> a -> [a]
+myIterate f a = a : myIterate f (f a)
+
+myUnfoldr :: (b -> Maybe (a, b))
+          -> b
+          -> [a]
+myUnfoldr f b = case f b of
+                  Just (a, b) -> a: myUnfoldr f b
+                  Nothing -> []
+
+betterIterate :: (a -> a) -> a -> [a]
+betterIterate f x = myUnfoldr (\x -> Just (x, f x)) x
