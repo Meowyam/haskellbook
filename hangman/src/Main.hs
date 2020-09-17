@@ -69,6 +69,11 @@ alreadyGuessed :: Puzzle -> Char -> Bool
 alreadyGuessed (Puzzle _ _ charList) guessChar =
   elem guessChar charList
 
+wrongGuess :: Puzzle -> Int
+wrongGuess (Puzzle getWord _ charList) =
+  length $ filter (not . (`elem` getWord)) charList 
+
+
 renderPuzzleChar :: Maybe Char -> Char
 renderPuzzleChar Nothing = '_'
 renderPuzzleChar (Just guessChar) = guessChar
@@ -105,8 +110,8 @@ handleGuess puzzle guess = do
       return (fillInCharacter puzzle guess)
 
 gameOver :: Puzzle -> IO ()
-gameOver (Puzzle wordToGuess _ guessed) =
-  if (length guessed) > 7 then
+gameOver p@(Puzzle wordToGuess _ guessed) =
+  if wrongGuess p > 7 then
     do putStrLn "You lose!"
        putStrLn $
          "The word was: " ++ wordToGuess
