@@ -1,6 +1,20 @@
 module Cipher where
 import Data.Char
 import Data.List
+import System.IO
+
+main :: IO ()
+main = do
+  hSetBuffering stdout NoBuffering
+  putStr "Your word: "
+  word <- getLine
+  putStr "Your caesar key: "
+  -- gets key as string
+  getKey <- getLine
+  let key = read getKey :: Int
+--  putStr "Do you want to Caesar press 1, UnCaesar press 2, Vigenere press 3, or UnVigenere press 4"
+  let cipherin = caesar key word
+  putStrLn (cipherin)
 
 alphabet = ['a'..'z']
 countChar c = length $ takeWhile(/=c) alphabet 
