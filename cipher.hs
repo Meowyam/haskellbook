@@ -11,7 +11,7 @@ main = do
   let whichCipher = read getCipher :: Int
   putStr "Your word: "
   word <- getLine
-  putStr "Your caesar key: "
+  putStr "Your key: "
   -- gets key as string
   key <- getLine
   case whichCipher of
