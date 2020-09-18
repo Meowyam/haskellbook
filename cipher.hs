@@ -6,15 +6,19 @@ import System.IO
 main :: IO ()
 main = do
   hSetBuffering stdout NoBuffering
+  putStr "If you want to Caesar press 1, UnCaesar press 2, Vigenere press 3, or UnVigenere press 4."
+  getCipher <- getLine
+  let whichCipher = read getCipher :: Int
   putStr "Your word: "
   word <- getLine
   putStr "Your caesar key: "
   -- gets key as string
-  getKey <- getLine
-  let key = read getKey :: Int
---  putStr "Do you want to Caesar press 1, UnCaesar press 2, Vigenere press 3, or UnVigenere press 4"
-  let cipherin = caesar key word
-  putStrLn (cipherin)
+  key <- getLine
+  case whichCipher of
+    1 -> putStrLn (caesar (read key :: Int) word)
+    2 -> putStrLn (unCaesar (read key :: Int) word)
+    3 -> putStrLn (doVigenere word key)
+    4 -> putStrLn (unVigenere word key)
 
 alphabet = ['a'..'z']
 countChar c = length $ takeWhile(/=c) alphabet 
@@ -33,12 +37,12 @@ unCaesar n (x:xs)
 
 --vigenere
 
-keyword = "ally"
-message = "meet at dawn"
+--keyword = "ally"
+--message = "meet at dawn"
 
 getLetterval = map countChar
 
-keyVal = getLetterval keyword
+keyVal k = getLetterval k
 
 getMsgval = getLetterval . concat . words
 
@@ -46,17 +50,17 @@ getMsgval = getLetterval . concat . words
 whereSpaces = init . scanl1 (+) . (map length . words)
 
 -- I used the cycle
-vCryptval m = [if x > (length alphabet) then x-(length alphabet) else x | x <-(zipWith (+) (cycle keyVal) (getMsgval m))]
+vCryptval m k = [if x > (length alphabet) then x-(length alphabet) else x | x <-(zipWith (+) (cycle (keyVal k)) (getMsgval m))]
 
-vCryptchar = map (alphabet !!) . vCryptval
+vCryptchar m k = map (alphabet !!) $ vCryptval m k
 
 -- split into where spaces should go and UNWORD into a string
 addSpaces m whichCrypt = unwords $ foldr (\space acc -> [fst $ splitAt space $ head acc] ++ [snd $ splitAt space $ head acc] ++ (tail acc)) [(whichCrypt)] (whereSpaces m) 
 
-doVigenere m = addSpaces m (vCryptchar m)
+doVigenere m k = addSpaces m (vCryptchar m k)
 
-unCryptval m = [if x < 0 then x+(length alphabet) else x | x <-(zipWith (-) (getMsgval m)(cycle keyVal)) ]
-unCryptchar = map (alphabet !!) . unCryptval
+unCryptval m k = [if x < 0 then x+(length alphabet) else x | x <-(zipWith (-) (getMsgval m)(cycle (keyVal k))) ]
+unCryptchar m k = map (alphabet !!) $ (unCryptval m k)
 
-unVigenere m = addSpaces m (unCryptchar m)
+unVigenere m k = addSpaces m (unCryptchar m k)
 
