@@ -32,10 +32,10 @@ gimmePerson = do
   putStrLn "What is your age?"
   age <- getLine
   case (readMaybe age :: Maybe Integer) of
-    Nothing -> do putStrLn $ "Age Not Integer"
+    Nothing -> do putStrLn $ "Error: Age Not Integer"
     Just age -> do case mkPerson name age of
-                     Left NameEmpty -> putStrLn ("Name Empty")
-                     Left AgeTooLow -> putStrLn ("Age Too Low")
-                     Left (PersonInvalidUnknown err) -> putStrLn (err)
-                     Right person -> putStrLn (show person)
+                     Left NameEmpty -> putStrLn ("Error: Name Empty")
+                     Left AgeTooLow -> putStrLn ("Error: Age Too Low")
+                     Left (PersonInvalidUnknown err) -> putStrLn ("Error: " ++ err)
+                     Right person -> putStrLn ("Yay! successfully got a person: " ++ show person)
 
