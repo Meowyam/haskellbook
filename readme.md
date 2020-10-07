@@ -11,3 +11,7 @@ extra references:
 [either] (https://tuttlem.github.io/2013/01/05/either-type-in-haskell.html)
 
 [how is Either useful] (https://www.reddit.com/r/haskell/comments/9r3xyf/how_is_either_useful/)
+
+[quickcheck 1](https://cseweb.ucsd.edu/classes/wi14/cse230-a/lectures/lec-quickcheck.html),
+[quickcheck 2] (https://begriffs.com/posts/2017-01-14-design-use-quickcheck.html),
+[how quickcheck generates random functions] (https://kseo.github.io/posts/2016-12-14-how-quick-check-generate-random-functions.html)
