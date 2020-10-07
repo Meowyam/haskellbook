@@ -15,3 +15,5 @@ extra references:
 [quickcheck 1](https://cseweb.ucsd.edu/classes/wi14/cse230-a/lectures/lec-quickcheck.html),
 [quickcheck 2] (https://begriffs.com/posts/2017-01-14-design-use-quickcheck.html),
 [how quickcheck generates random functions] (https://kseo.github.io/posts/2016-12-14-how-quick-check-generate-random-functions.html)
+
+[monoid error could not deduce semigroup optional etc.] (https://stackoverflow.com/questions/52237895/could-not-deduce-semigroup-optional-a-arising-from-the-superclasses-of-an-in)
