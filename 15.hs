@@ -6,9 +6,13 @@ data Optional a =
     | Only a
     deriving (Eq, Show)
 
-instance Semigroup a
-      => Monoid (Optional a) where
+instance Monoid a
+    => Monoid (Optional a) where
   mempty = Nada
+
+
+instance Semigroup a
+      => Semigroup (Optional a) where
   (Nada) <> (Nada) = Nada
   (Nada) <> (Only a) = Only a
   (Only a) <> (Nada) = Only a
