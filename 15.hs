@@ -16,4 +16,4 @@ instance Semigroup a
   (Nada) <> (Nada) = Nada
   (Nada) <> (Only a) = Only a
   (Only a) <> (Nada) = Only a
-  )Only a) (Only b) = Only (a <> b)
+  (Only a) <> (Only b) = Only (a <> b)
