@@ -75,3 +75,8 @@ main = do
   quickCheck (monoidAssoc :: FirstMappend) 
   quickCheck (monoidLeftIdentity :: FstId) 
   quickCheck (monoidRightIdentity :: FstId)
+
+-- nonempty
+-- data NonEmpty a = a :| [a]
+-- guarantees that we always have at least one value of type a, which [a] does not guarantee, as any list might be empty.
+
