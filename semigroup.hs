@@ -82,17 +82,56 @@ instance Arbitrary BoolConj where
     frequency [ (1, return (BoolConj True))
               , (1, return (BoolConj False)) ]
 
-instance Semigroup Bool where
-  True <> True = True
-  _ <> False = False
-  False <> _ = False
-
 instance Semigroup BoolConj where
-    BoolConj a <> BoolConj b = BoolConj (a <> b) 
+    BoolConj True <> BoolConj True = BoolConj True 
+    BoolConj False <> BoolConj _ = BoolConj False 
+    BoolConj _ <> BoolConj False = BoolConj False 
 
 type BoolConjAssoc =
   BoolConj -> BoolConj -> BoolConj -> Bool
 
+-- booldisj
+
+newtype BoolDisj = BoolDisj Bool deriving (Eq, Show)
+
+instance Arbitrary BoolDisj where
+  arbitrary = 
+    frequency [ (1, return (BoolDisj True))
+              , (1, return (BoolDisj False)) ]
+
+instance Semigroup BoolDisj where
+    BoolDisj False <> BoolDisj False = BoolDisj False 
+    BoolDisj True <> BoolDisj _ = BoolDisj True 
+    BoolDisj _ <> BoolDisj True = BoolDisj True 
+
+type BoolDisjAssoc =
+  BoolDisj -> BoolDisj -> BoolDisj -> Bool
+
+-- or a b
+
+data Or a b =
+    Fst a
+  | Snd b
+    deriving (Eq, Show)
+
+instance (Arbitrary a, Arbitrary b) => Arbitrary (Or a b) where
+  arbitrary = do
+    a <- arbitrary
+    b <- arbitrary
+    frequency [ (1, return (Fst a))
+              , (1, return (Snd b)) ]
+
+instance Semigroup (Or a b) where
+  Fst a <> Snd b = Snd b
+  Fst a <> Fst b = Fst b
+  Snd a <> _ = Snd a
+
+type OrTriv = Or Trivial Trivial
+
+type OrAssoc =
+  OrTriv -> OrTriv -> OrTriv -> Bool
+
+-- combine a b
 --
 main :: IO ()
 main = do
@@ -101,3 +140,5 @@ main = do
   quickCheck (semigroupAssoc :: TwoAssoc)
   quickCheck (semigroupAssoc :: ThreeAssoc)
   quickCheck (semigroupAssoc :: BoolConjAssoc)
+  quickCheck (semigroupAssoc :: BoolDisjAssoc)
+  quickCheck (semigroupAssoc :: OrAssoc)
