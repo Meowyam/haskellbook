@@ -132,6 +132,32 @@ type OrAssoc =
   OrTriv -> OrTriv -> OrTriv -> Bool
 
 -- combine a b
+
+newtype Combine a b =
+  Combine { unCombine :: (a -> b) }
+
+instance (Semigroup b) => Semigroup (Combine a b) where
+  f <> g = Combine $ \n -> ((unCombine f) n) <> ((unCombine g) n)
+
+-- https://stackoverflow.com/questions/41350192/how-to-test-semigroup-law-for-this-data-type
+-- https://stackoverflow.com/questions/47849407/coarbitrary-in-haskell
+
+instance (CoArbitrary a, Arbitrary b) => Arbitrary (Combine a b) where
+  arbitrary = do
+    f <- arbitrary
+    return (Combine { unCombine = f})
+
+instance Eq (Combine a b) where
+  (Combine _) == (Combine _) = True
+
+instance Show (Combine a b) where
+  show (Combine { unCombine = _}) = "Combine <function>"
+
+type CombGen = Combine Int (Sum Int)
+
+type CombAssoc =
+  CombGen -> CombGen -> CombGen -> Bool
+
 --
 main :: IO ()
 main = do
@@ -142,3 +168,4 @@ main = do
   quickCheck (semigroupAssoc :: BoolConjAssoc)
   quickCheck (semigroupAssoc :: BoolDisjAssoc)
   quickCheck (semigroupAssoc :: OrAssoc)
+  quickCheck (semigroupAssoc :: CombAssoc)
