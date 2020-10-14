@@ -51,6 +51,26 @@ instance Arbitrary a => Arbitrary (Identity a) where
 type IdentAssoc =
   Identity (Sum Int) -> Identity (Sum Int) -> Identity (Sum Int) -> Bool
 
+-- data two
+
+data Two a b = Two a b deriving (Show, Eq)
+
+instance (Semigroup a, Semigroup b) => Semigroup (Two a b) where
+  (Two a b) <> (Two x y) = Two (a <> x) (b <> y)
+
+instance (Monoid a, Monoid b) => Monoid (Two a b) where
+  mempty = Two mempty mempty
+  mappend (Two a b)(Two x y) = Two (a <> x)(b <> y)
+
+instance (Arbitrary a, Arbitrary b) => Arbitrary (Two a b) where
+  arbitrary = do
+    a <- arbitrary
+    b <- arbitrary
+    return (Two a b)
+
+type TwoAssoc =
+  Two (Sum Int) (Sum Int) -> Two (Sum Int) (Sum Int) -> Two (Sum Int) (Sum Int) -> Bool
+
 --
 
 main :: IO ()
@@ -61,3 +81,6 @@ main = do
   quickCheck (semigroupAssoc :: IdentAssoc)
   quickCheck (monoidLeftIdentity :: Identity (Sum Int) -> Bool)
   quickCheck (monoidRightIdentity :: Identity (Sum Int) -> Bool)
+  quickCheck (semigroupAssoc :: TwoAssoc)
+  quickCheck (monoidLeftIdentity :: Two (Sum Int) (Sum Int) -> Bool)
+  quickCheck (monoidRightIdentity :: Two (Sum Int) (Sum Int) -> Bool)
