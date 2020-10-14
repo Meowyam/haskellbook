@@ -71,6 +71,28 @@ instance (Arbitrary a, Arbitrary b) => Arbitrary (Two a b) where
 type TwoAssoc =
   Two (Sum Int) (Sum Int) -> Two (Sum Int) (Sum Int) -> Two (Sum Int) (Sum Int) -> Bool
 
+-- boolconj
+
+newtype BoolConj = BoolConj Bool deriving (Eq, Show)
+
+instance Semigroup BoolConj where
+  BoolConj True <> BoolConj True = BoolConj True 
+  BoolConj False <> BoolConj _ = BoolConj False 
+  BoolConj _ <> BoolConj False = BoolConj False 
+
+instance Monoid BoolConj where
+  mempty = BoolConj True
+--  mappend (BoolConj True) mempty = BoolConj True
+  mappend _ (BoolConj False) = BoolConj False
+
+instance Arbitrary BoolConj where
+  arbitrary = 
+    frequency [ (1, return (BoolConj True))
+              , (1, return (BoolConj False)) ]
+
+type BoolConjAssoc =
+  BoolConj -> BoolConj -> BoolConj -> Bool
+
 --
 
 main :: IO ()
@@ -84,3 +106,6 @@ main = do
   quickCheck (semigroupAssoc :: TwoAssoc)
   quickCheck (monoidLeftIdentity :: Two (Sum Int) (Sum Int) -> Bool)
   quickCheck (monoidRightIdentity :: Two (Sum Int) (Sum Int) -> Bool)
+  quickCheck (semigroupAssoc :: BoolConjAssoc)
+  quickCheck (monoidLeftIdentity :: BoolConj -> Bool)
+  quickCheck (monoidRightIdentity :: BoolConj -> Bool)
