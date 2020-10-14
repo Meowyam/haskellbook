@@ -153,10 +153,30 @@ instance Eq (Combine a b) where
 instance Show (Combine a b) where
   show (Combine { unCombine = _}) = "Combine <function>"
 
-type CombGen = Combine Int (Sum Int)
-
 type CombAssoc =
-  CombGen -> CombGen -> CombGen -> Bool
+  Combine Int (Sum Int) -> Combine Int (Sum Int) -> Combine Int (Sum Int) -> Bool
+
+-- comp a
+
+newtype Comp a =
+  Comp { unComp :: (a -> a) }
+
+instance Eq (Comp a) where
+  (Comp _) == (Comp _) = True
+
+instance Show (Comp a) where
+  show (Comp _) = "Comp <function>"
+
+instance (Semigroup a) => Semigroup (Comp a) where
+  Comp a <> Comp b = Comp (a . b)
+
+instance (CoArbitrary a, Arbitrary a) => Arbitrary (Comp a) where
+  arbitrary = do
+    f <- arbitrary
+    return (Comp { unComp = f})
+
+type CompAssoc =
+  Comp (Sum Int) -> Comp (Sum Int) -> Comp (Sum Int) -> Bool
 
 --
 main :: IO ()
@@ -169,3 +189,4 @@ main = do
   quickCheck (semigroupAssoc :: BoolDisjAssoc)
   quickCheck (semigroupAssoc :: OrAssoc)
   quickCheck (semigroupAssoc :: CombAssoc)
+  quickCheck (semigroupAssoc :: CompAssoc)
