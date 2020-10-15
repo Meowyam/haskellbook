@@ -93,6 +93,27 @@ instance Arbitrary BoolConj where
 type BoolConjAssoc =
   BoolConj -> BoolConj -> BoolConj -> Bool
 
+-- booldisj
+
+newtype BoolDisj = BoolDisj Bool deriving (Eq, Show)
+
+instance Semigroup BoolDisj where
+    BoolDisj False <> BoolDisj False = BoolDisj False 
+    BoolDisj True <> BoolDisj _ = BoolDisj True 
+    BoolDisj _ <> BoolDisj True = BoolDisj True 
+
+instance Monoid BoolDisj where
+  mempty = BoolDisj False
+  mappend (BoolDisj True) _ = BoolDisj True
+
+instance Arbitrary BoolDisj where
+  arbitrary = 
+    frequency [ (1, return (BoolDisj True))
+              , (1, return (BoolDisj False)) ]
+
+type BoolDisjAssoc =
+  BoolDisj -> BoolDisj -> BoolDisj -> Bool
+
 --
 
 main :: IO ()
@@ -109,3 +130,6 @@ main = do
   quickCheck (semigroupAssoc :: BoolConjAssoc)
   quickCheck (monoidLeftIdentity :: BoolConj -> Bool)
   quickCheck (monoidRightIdentity :: BoolConj -> Bool)
+  quickCheck (semigroupAssoc :: BoolDisjAssoc)
+  quickCheck (monoidLeftIdentity :: BoolDisj -> Bool)
+  quickCheck (monoidRightIdentity :: BoolDisj -> Bool)
