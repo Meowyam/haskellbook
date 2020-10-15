@@ -114,6 +114,58 @@ instance Arbitrary BoolDisj where
 type BoolDisjAssoc =
   BoolDisj -> BoolDisj -> BoolDisj -> Bool
 
+-- combine a b
+
+newtype Combine a b =
+  Combine { unCombine :: (a -> b) }
+
+instance (Semigroup b) => Semigroup (Combine a b) where
+  f <> g = Combine $ \n -> ((unCombine f) n) <> ((unCombine g) n)
+
+instance (Monoid b) => Monoid (Combine a b) where
+  mempty = Combine mempty
+  mappend f g = Combine $ \n -> ((unCombine f) n) <> ((unCombine g) n)
+
+instance (CoArbitrary a, Arbitrary b) => Arbitrary (Combine a b) where
+  arbitrary = do
+    f <- arbitrary
+    return (Combine { unCombine = f})
+
+instance Eq (Combine a b) where
+  (Combine _) == (Combine _) = True
+
+instance Show (Combine a b) where
+  show (Combine { unCombine = _}) = "Combine <function>"
+
+type CombAssoc =
+  Combine Int (Sum Int) -> Combine Int (Sum Int) -> Combine Int (Sum Int) -> Bool
+
+-- comp a
+
+newtype Comp a =
+  Comp { unComp :: (a -> a) }
+
+instance Eq (Comp a) where
+  (Comp _) == (Comp _) = True
+
+instance Show (Comp a) where
+  show (Comp _) = "Comp <function>"
+
+instance (Semigroup a) => Semigroup (Comp a) where
+  Comp a <> Comp b = Comp (a . b)
+
+instance (Monoid a) => Monoid (Comp a) where
+  mempty = Comp id 
+  mappend (Comp a) (Comp b) = Comp (a . b)
+
+instance (CoArbitrary a, Arbitrary a) => Arbitrary (Comp a) where
+  arbitrary = do
+    f <- arbitrary
+    return (Comp { unComp = f})
+
+type CompAssoc =
+  Comp (Sum Int) -> Comp (Sum Int) -> Comp (Sum Int) -> Bool
+
 --
 
 main :: IO ()
@@ -133,3 +185,9 @@ main = do
   quickCheck (semigroupAssoc :: BoolDisjAssoc)
   quickCheck (monoidLeftIdentity :: BoolDisj -> Bool)
   quickCheck (monoidRightIdentity :: BoolDisj -> Bool)
+  quickCheck (semigroupAssoc :: CombAssoc)
+  quickCheck (monoidLeftIdentity :: Combine Int (Sum Int) -> Bool)
+  quickCheck (monoidRightIdentity :: Combine Int (Sum Int) -> Bool)
+  quickCheck (semigroupAssoc :: CompAssoc)
+  quickCheck (monoidLeftIdentity :: Comp (Sum Int) -> Bool)
+  quickCheck (monoidRightIdentity :: Comp (Sum Int) -> Bool)
