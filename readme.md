@@ -19,3 +19,5 @@ extra references:
 [monoid error could not deduce semigroup optional etc.] (https://stackoverflow.com/questions/52237895/could-not-deduce-semigroup-optional-a-arising-from-the-superclasses-of-an-in)
 
 [functor for newtype Mu f; tldr "Can I functor?" "No you can't."] (https://stackoverflow.com/questions/39770191/functor-instance-for-newtype-mu-f-inf-outf-f-mu-f)
+
+[the functor design pattern] (http://www.haskellforall.com/2012/09/the-functor-design-pattern.html)

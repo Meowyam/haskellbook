@@ -176,4 +176,43 @@ data Notorious g o a t =
   Notorious (g o) (g a) (g t)
 
 instance Functor g => Functor (Notorious g o a) where
-  fmap x (Notorious go ga gt) = Notorious go ga (fmap x gt)
+  fmap x (Notorious go ga gt) = Notorious go ga $ fmap x gt
+
+data List a =
+      Nil
+    | Cons a (List a)
+
+instance Functor List where
+  fmap _ Nil = Nil
+  fmap f (Cons x xs) = Cons (f x) $ fmap f xs
+
+data GoatLord a =
+      NoGoat
+    | OneGoat a
+    | MoreGoats (GoatLord a)
+                (GoatLord a)
+                (GoatLord a)
+
+instance Functor GoatLord where
+  fmap _ NoGoat = NoGoat
+  fmap f (OneGoat x) = OneGoat $ f x
+  fmap f (MoreGoats x y z) = MoreGoats (fmap f x) (fmap f y) (fmap f z)
+
+data TalkToMe a =
+      Halt
+    | Print String a
+    | Read (String -> a)
+
+instance Functor TalkToMe where
+  fmap _ Halt = Halt
+  fmap f (Print str x) = Print str $ f x
+  fmap f (Read stra) = Read (f . stra)
+
+--Prelude> fmap (+1) $ Just 1
+--Just 2
+--Prelude> fmap (+1) [1, 2, 3]
+--[2,3,4]
+--In the first case, we lift the function into a Maybe context in
+--order to apply it and, in the second case, into a list context. It
+--can be helpful to think of it in terms of lifting the function
+--into a context
