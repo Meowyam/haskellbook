@@ -21,3 +21,8 @@ extra references:
 [functor for newtype Mu f; tldr "Can I functor?" "No you can't."] (https://stackoverflow.com/questions/39770191/functor-instance-for-newtype-mu-f-inf-outf-f-mu-f)
 
 [the functor design pattern] (http://www.haskellforall.com/2012/09/the-functor-design-pattern.html)
+
+["I am at a loss to understand recursion in a monad"](https://stackoverflow.com/questions/27062003/recursion-in-a-monad)
+[recursion in a monad](https://wiki.haskell.org/Recursion_in_a_monad)
+
+[Monads \(forget about bind\)](https://www.ahnfelt.net/monads-forget-about-bind/)

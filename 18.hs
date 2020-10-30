@@ -186,6 +186,12 @@ instance Semigroup (List a) where
 
 instance Eq a => EqProp (List a) where
   (=-=) = eq
+
+--
+
+j :: Monad m => m (m a) -> m a
+j m = m >>= id
+
 --
 
 main = do
