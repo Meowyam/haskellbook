@@ -47,7 +47,7 @@ instance Monoid (List a) where
 instance Semigroup (List a) where
   Nil <> l = l
   l <> Nil = l
-  (Cons x xs) <> l = Cons x (xs <> l)
+  (Cons a as) <> l = Cons a (as <> l)
 
 instance Arbitrary a => Arbitrary (List a) where
   arbitrary =

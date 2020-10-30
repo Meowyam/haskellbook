@@ -123,7 +123,69 @@ instance (Semigroup b, Semigroup a)
 instance (Monoid b, Monoid a) => Monoid (BahEither b a) where
   mempty = PLeft mempty
 
+--
 
+newtype Identity a = Identity a
+  deriving (Eq, Ord, Show)
+
+instance Functor Identity where
+  fmap f (Identity a) = Identity (f a)
+
+instance Applicative Identity where
+  pure = Identity 
+  (<*>) (Identity f) (Identity a) = Identity $ f a 
+
+instance Monad Identity where
+  return = pure
+  (>>=) (Identity a) f = f a 
+
+instance (Arbitrary a) => Arbitrary (Identity a) where
+  arbitrary = do
+    a <- arbitrary
+    return (Identity a)
+
+instance Eq a => EqProp (Identity a) where
+  (=-=) = eq
+
+--
+
+data List a =
+    Nil
+  | Cons a (List a)
+  deriving (Eq, Show)
+
+instance Functor (List) where
+  fmap f (Cons a as) = Cons (f a) (fmap f as) 
+  fmap _ (Nil) = Nil 
+
+instance Applicative (List) where
+  pure a = Cons a Nil 
+  (<*>) _ (Nil) = Nil 
+  (<*>) (Nil) _ = Nil
+  (<*>) (Cons f fs) as = (f <$> as) <> (fs <*> as)
+
+instance Monad (List) where
+  return = pure
+  (>>=) (Nil) _ = Nil 
+  (>>=) (Cons a as) f = (f a) <> (as >>= f) 
+
+instance (Arbitrary a) => Arbitrary (List a) where
+  arbitrary =
+    frequency [
+      (1, return Nil),
+      (1, Cons <$> arbitrary <*> arbitrary)
+    ]
+
+instance Monoid (List a) where
+  mempty = Nil
+
+instance Semigroup (List a) where
+  Nil <> ls = ls
+  ls <> Nil = ls
+  (Cons x xs) <> ls = Cons x (xs <> ls)
+
+instance Eq a => EqProp (List a) where
+  (=-=) = eq
 --
 
 main = do
@@ -131,9 +193,19 @@ main = do
       nopetrig = undefined
   let bahtrig :: BahEither String (Int, String, Int)
       bahtrig = undefined
+  let idtrig :: Identity (Int, String, Int)
+      idtrig = undefined
+  let lstrig :: List (Int, String, Int)
+      lstrig = undefined
   quickBatch $ functor nopetrig
   quickBatch $ applicative nopetrig
   quickBatch $ monad nopetrig
   quickBatch $ functor bahtrig
   quickBatch $ applicative bahtrig
   quickBatch $ monad bahtrig
+  quickBatch $ functor idtrig
+  quickBatch $ applicative idtrig
+  quickBatch $ monad idtrig
+  quickBatch $ functor lstrig
+  quickBatch $ applicative lstrig
+  quickBatch $ monad lstrig
