@@ -26,3 +26,6 @@ extra references:
 [recursion in a monad](https://wiki.haskell.org/Recursion_in_a_monad)
 
 [Monads \(forget about bind\)](https://www.ahnfelt.net/monads-forget-about-bind/)
+
+[https://medium.com/criteo-labs/introduction-to-property-based-testing-f5236229d237](introduction to property based testing (with fast check))
+[https://medium.com/@fommil/simple-haskell-is-best-haskell-6a1ea59c73b](simple haskell is best haskell) 
