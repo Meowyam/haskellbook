@@ -3,11 +3,13 @@ module Morse
        , charToMorse
        , morseToChar
        , stringToMorse
+       , morse
        , letterToMorse
        , morseToLetter
        ) where
 
 import qualified Data.Map as M
+import Data.Maybe
 
 type Morse = String
 
@@ -62,7 +64,10 @@ charToMorse c =
 
 stringToMorse :: String -> Maybe [Morse]
 stringToMorse s =
-  sequence $ fmap charToMorse s
+  traverse charToMorse s
+
+morse :: String -> [Morse]
+morse s = fromMaybe [] (stringToMorse s)
 
 morseToChar :: Morse -> Maybe Char
 morseToChar m =
