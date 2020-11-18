@@ -205,6 +205,43 @@ instance (Eq a, Eq b) => EqProp (Bigger a b) where
 
 --
 
+data Tree a =
+    Empty
+  | Leaf a
+  | Node (Tree a) a (Tree a)
+  deriving (Eq, Show)
+
+instance Functor Tree where
+  fmap f (Empty) = Empty
+  fmap f (Leaf a) = Leaf (f a)
+  fmap f (Node left a right) = Node (fmap f left) (f a) (fmap f right)
+
+instance Foldable Tree where
+  foldMap f (Empty) = mempty
+  foldMap f (Leaf a) = f a
+  foldMap f (Node left a right) = foldMap f left <> f a <> foldMap f right
+
+instance Traversable Tree where
+  traverse f Empty = pure Empty
+  traverse f (Leaf a) = Leaf <$> f a
+  traverse f (Node left a right) = Node <$> traverse f left <*> f a <*> traverse f right
+
+instance Arbitrary a => Arbitrary (Tree a) where
+  arbitrary = do
+    a <- arbitrary
+    l <- arbitrary
+    r <- arbitrary
+    frequency [
+      (1, return Empty),
+      (1, return (Leaf a)),
+      (1, return (Node (Leaf l) a (Leaf r)))
+      ]
+
+instance Eq a => EqProp (Tree a) where
+  (=-=) = eq
+
+--
+
 type Testtype = (Int, [Int], String)
 
 --
@@ -226,6 +263,8 @@ main = do
       bigtrig = undefined
   let biggertrig :: Bigger Testtype Testtype 
       biggertrig = undefined
+  let treetrig :: Tree Testtype 
+      treetrig = undefined
   quickBatch $ traversable idtrig
   quickBatch $ traversable constrig
   quickBatch $ traversable optrig
@@ -234,4 +273,5 @@ main = do
   quickBatch $ traversable pairtrig
   quickBatch $ traversable bigtrig
   quickBatch $ traversable biggertrig
+  quickBatch $ traversable treetrig
 
