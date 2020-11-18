@@ -8,6 +8,7 @@ import Control.Monad
 import Test.QuickCheck
 import Test.QuickCheck.Checkers
 import Test.QuickCheck.Classes
+import Control.Applicative
 
 newtype Identity a = Identity a
   deriving (Eq, Ord, Show)
@@ -45,7 +46,7 @@ instance Foldable (Constant a) where
 instance Arbitrary a => Arbitrary (Constant a b) where
   arbitrary = Constant <$> arbitrary
 
-instance (Eq a) => EqProp (Constant a b) where
+instance (Eq a, Eq b) => EqProp (Constant a b) where
   (=-=) = eq
 
 --
@@ -107,6 +108,102 @@ instance Eq a => EqProp (List a) where
   (=-=) = eq
 
 --
+data Three a b c =
+  Three a b c
+  deriving (Eq, Ord, Show)
+
+instance Foldable (Three a b) where
+  foldMap f (Three x y z) = f z
+
+instance (Arbitrary a, Arbitrary b, Arbitrary c) => Arbitrary (Three a b c) where
+  arbitrary = do
+    x <- arbitrary
+    y <- arbitrary
+    z <- arbitrary
+    return $ Three x y z
+
+instance Functor (Three a b) where
+  fmap f (Three x y z) = Three x y (f z) 
+
+-- traverse :: (a -> f b) -> t a -> f (t b)
+instance Traversable (Three a b) where
+  traverse f (Three x y z) = Three x y <$> f z 
+
+instance (Eq a, Eq b, Eq c) => EqProp (Three a b c) where
+  (=-=) = eq
+
+--
+data Pair a b =
+  Pair a b
+  deriving (Eq, Ord, Show)
+
+instance Foldable (Pair a) where
+  foldMap f (Pair x y) = f y
+
+instance (Arbitrary a, Arbitrary b) => Arbitrary (Pair a b) where
+  arbitrary = do
+    x <- arbitrary
+    y <- arbitrary
+    return $ Pair x y
+
+instance Functor (Pair a) where
+  fmap f (Pair x y) = Pair x (f y) 
+
+instance Traversable (Pair a) where
+  traverse f (Pair x y) = Pair x <$> f y 
+
+instance (Eq a, Eq b) => EqProp (Pair a b) where
+  (=-=) = eq
+
+--
+data Big a b =
+  Big a b b
+  deriving (Eq, Ord, Show)
+
+instance Foldable (Big a) where
+  foldMap f (Big x y z) = (f y) <> (f z)
+
+instance Functor (Big a) where
+  fmap f (Big x y z) = Big x (f y) (f z)
+
+instance (Arbitrary a, Arbitrary b) => Arbitrary (Big a b) where
+  arbitrary = do
+    x <- arbitrary
+    y <- arbitrary
+    return $ Big x y y
+
+--liftA2 :: Applicative f => (a -> b -> c) -> f a -> f b -> f c
+instance Traversable (Big a) where
+  traverse f (Big x y z) = liftA2 (Big x) (f y) (f z) 
+
+instance (Eq a, Eq b) => EqProp (Big a b) where
+  (=-=) = eq
+
+--
+data Bigger a b =
+  Bigger a b b b
+  deriving (Eq, Ord, Show)
+
+instance Foldable (Bigger a) where
+  foldMap f (Bigger w x y z) = (f x) <> (f y) <> (f z)
+
+instance Functor (Bigger a) where
+  fmap f (Bigger w x y z) = Bigger w (f x ) (f y) (f z)
+
+instance (Arbitrary a, Arbitrary b) => Arbitrary (Bigger a b) where
+  arbitrary = do
+    x <- arbitrary
+    y <- arbitrary
+    return $ Bigger x y y y
+
+--liftA3 :: Applicative f => (a -> b -> c -> d) -> f a -> f b -> f c -> f d
+instance Traversable (Bigger a) where
+  traverse f (Bigger w x y z) = liftA3 (Bigger w) (f x) (f y) (f z) 
+
+instance (Eq a, Eq b) => EqProp (Bigger a b) where
+  (=-=) = eq
+
+--
 
 type Testtype = (Int, [Int], String)
 
@@ -121,8 +218,20 @@ main = do
       optrig = undefined
   let lstrig :: List Testtype 
       lstrig = undefined
+  let threetrig :: Three Testtype Testtype Testtype
+      threetrig = undefined
+  let pairtrig :: Pair Testtype Testtype 
+      pairtrig = undefined
+  let bigtrig :: Big Testtype Testtype 
+      bigtrig = undefined
+  let biggertrig :: Bigger Testtype Testtype 
+      biggertrig = undefined
   quickBatch $ traversable idtrig
   quickBatch $ traversable constrig
   quickBatch $ traversable optrig
   quickBatch $ traversable lstrig
+  quickBatch $ traversable threetrig
+  quickBatch $ traversable pairtrig
+  quickBatch $ traversable bigtrig
+  quickBatch $ traversable biggertrig
 
