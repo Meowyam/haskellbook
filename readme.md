@@ -14,7 +14,7 @@ extra references:
 
 [quickcheck 1](https://cseweb.ucsd.edu/classes/wi14/cse230-a/lectures/lec-quickcheck.html),
 [quickcheck 2](https://begriffs.com/posts/2017-01-14-design-use-quickcheck.html),
-[how quickcheck generates random functions] (https://kseo.github.io/posts/2016-12-14-how-quick-check-generate-random-functions.html)
+[how quickcheck generates random functions](https://kseo.github.io/posts/2016-12-14-how-quick-check-generate-random-functions.html)
 
 [monoid error could not deduce semigroup optional etc.](https://stackoverflow.com/questions/52237895/could-not-deduce-semigroup-optional-a-arising-from-the-superclasses-of-an-in)
 
@@ -27,5 +27,9 @@ extra references:
 
 [Monads \(forget about bind\)](https://www.ahnfelt.net/monads-forget-about-bind/)
 
-[https://medium.com/criteo-labs/introduction-to-property-based-testing-f5236229d237](introduction to property based testing (with fast check))
-[https://medium.com/@fommil/simple-haskell-is-best-haskell-6a1ea59c73b](simple haskell is best haskell) 
+[introduction to property based testing (with fast check)](https://medium.com/criteo-labs/introduction-to-property-based-testing-f5236229d237)
+[simple haskell is best haskell](https://medium.com/@fommil/simple-haskell-is-best-haskell-6a1ea59c73b)
+
+[applicatives are monoidal](https://argumatronic.com/posts/2017-03-08-applicative-instances.html)
+
+[stacking monads](https://blog.ssanj.net/posts/2018-01-12-stacking-the-readert-writert-monad-transformer-stack-in-haskell.html)
