@@ -1,4 +1,4 @@
-module RandomExample where
+module Dice where
 
 import System.Random
 
