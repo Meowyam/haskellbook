@@ -59,3 +59,19 @@ instance Monad (Moi s) where
 ----  (Reader ra) >>= aRb =
  ----   Reader $ \r -> runReader (aRb (ra r)) r
 
+-- chapter exercises
+
+get :: Moi s s
+get = Moi $ \s -> (s, s)
+
+put :: s -> Moi s ()
+put s = Moi $ \s -> ((), s)
+
+exec :: Moi s a -> s -> s
+exec (Moi sa) s = snd $ sa s
+
+eval :: Moi s a -> s -> a
+eval (Moi sa) s = fst $ sa s
+
+modify :: (s -> s) -> Moi s ()
+modify f = Moi $ \s -> ((), f s)
