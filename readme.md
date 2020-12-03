@@ -33,3 +33,5 @@ extra references:
 [applicatives are monoidal](https://argumatronic.com/posts/2017-03-08-applicative-instances.html)
 
 [stacking monads](https://blog.ssanj.net/posts/2018-01-12-stacking-the-readert-writert-monad-transformer-stack-in-haskell.html)
+
+[using parsec](http://book.realworldhaskell.org/read/using-parsec.html)
