@@ -35,3 +35,4 @@ extra references:
 [stacking monads](https://blog.ssanj.net/posts/2018-01-12-stacking-the-readert-writert-monad-transformer-stack-in-haskell.html)
 
 [using parsec](http://book.realworldhaskell.org/read/using-parsec.html)
+[an introduction to parsing text in haskell with parsec](https://www.cnblogs.com/ncore/p/6892500.html)
