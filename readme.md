@@ -36,3 +36,5 @@ extra references:
 
 [using parsec](http://book.realworldhaskell.org/read/using-parsec.html)
 [an introduction to parsing text in haskell with parsec](https://www.cnblogs.com/ncore/p/6892500.html)
+
+[When You Should Use Lists in Haskell (Mostly, You Should Not)](https://arxiv.org/pdf/1808.08329.pdf)
