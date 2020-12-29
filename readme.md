@@ -38,3 +38,5 @@ extra references:
 [an introduction to parsing text in haskell with parsec](https://www.cnblogs.com/ncore/p/6892500.html)
 
 [When You Should Use Lists in Haskell (Mostly, You Should Not)](https://arxiv.org/pdf/1808.08329.pdf)
+
+[functional parsing - graham hutton](https://youtu.be/dDtZLm7HIJs)
