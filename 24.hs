@@ -1,6 +1,7 @@
 module LearnParsers where
 import Text.Trifecta
 import Text.Parser.Combinators
+import Data.Char
 
 stop :: Parser a
 stop = unexpected "stop"
@@ -40,6 +41,12 @@ stringChar (x:xs) = go (x:xs) mempty
   where
     go [] allChar = return allChar
     go (x:xs) allChar = char x >>= (\eachChar -> go xs (allChar ++ [eachChar]))
+
+stringInt :: Parser Integer
+stringInt = do
+  i <- integer
+  _ <- eof
+  return i
 
 pNL s =
   putStrLn ('\n' : s)
